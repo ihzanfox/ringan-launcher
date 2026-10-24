@@ -3,7 +3,7 @@
     <string name="app_name">Ringan</string>
     <string name="launcher_menu">Menu launcher</string>
     <string name="remote_keys_label">Ringan: tombol remote</string>
-    <string name="remote_keys_description">Saat launcher Google TV dimatikan, tombol Settings di remote membuka Pengaturan Android, dan tombol Guide atau Notifikasi kembali ke papan Ringan. Ini mencegah penerima tombol bawaan TV crash, yang membuat tombol Input dan tombol aplikasi ikut mati. Layanan ini juga menghitung jam tayang anak, memutar azan, dan mengunci remote selama azan. Layanan ini hanya menyaring tombol remote dan tidak membaca isi layar.</string>
+    <string name="remote_keys_description">Saat launcher Google TV dimatikan, tombol Settings di remote membuka Pengaturan Android, dan tombol Guide atau Notifikasi kembali ke papan Ringan. Ini mencegah penerima tombol bawaan TV crash, yang membuat tombol Input dan tombol aplikasi ikut mati. Layanan ini juga menghitung jam tayang anak, memutar azan, mengunci remote selama azan, dan meminta PIN orang tua saat Setelan dibuka. Layanan ini hanya menyaring tombol remote dan melihat kapan aplikasi Setelan terbuka; isi layar tidak dibaca.</string>
 
     <!-- Papan keberangkatan -->
     <string name="departures">KEBERANGKATAN</string>
@@ -76,6 +76,57 @@
     <string name="parental_unlock_menu">Buka kunci jam tayang (PIN)</string>
     <string name="parental_relock_menu">Kunci lagi sekarang (terbuka sampai %s)</string>
     <string name="parental_relocked">Gerbang jam tayang ditutup lagi</string>
+    <string name="flight_left_minutes">Sisa terbang %d mnt</string>
+    <string name="flight_left_hours">Sisa terbang %1$d j %2$d mnt</string>
+    <string name="flight_unlocked">Gerbang dibuka sampai %s</string>
+    <string name="announce_landing_soon">Perhatian. Pesawat akan mendarat lima menit lagi. Bersiap-siap, ya.</string>
+    <string name="landing_soon_title">PESAWAT AKAN MENDARAT</string>
+    <string name="landing_soon_hint">%d menit lagi · bersiap-siap, ya</string>
+    <string name="parent_settings_menu">Pengaturan orang tua</string>
+    <string name="settings_title">Pengaturan orang tua</string>
+    <string name="settings_session">Batas sekali menonton: %s</string>
+    <string name="settings_session_title">Batas sekali menonton</string>
+    <string name="settings_break">Istirahat setelah batas: %s</string>
+    <string name="settings_break_title">Lama istirahat</string>
+    <string name="settings_daily">Jatah per hari: %s</string>
+    <string name="settings_daily_title">Jatah menonton per hari</string>
+    <string name="settings_bedtime">Jam tidur: %s</string>
+    <string name="settings_bedtime_title">Jam tidur</string>
+    <string name="settings_wakeup">Jam bangun: %s</string>
+    <string name="settings_wakeup_title">Jam bangun</string>
+    <string name="settings_unlock">Lama buka dengan PIN (pilihan pertama): %s</string>
+    <string name="settings_unlock_title">Pilihan pertama lama buka gerbang</string>
+    <string name="settings_pin">Ganti PIN</string>
+    <string name="settings_dns">DNS bebas iklan: %s</string>
+    <string name="settings_reset">Pakai lagi nilai dari config.json</string>
+    <string name="settings_reset_done">Pengaturan dari TV dihapus, kembali memakai config.json</string>
+    <string name="settings_close">Tutup</string>
+    <string name="settings_save">Simpan</string>
+    <string name="settings_next">Lanjut</string>
+    <string name="value_unlimited">tanpa batas</string>
+    <string name="value_none">tidak dipakai</string>
+    <string name="wheel_hint">Atas/bawah mengubah nilai, kiri/kanan pindah kolom, lalu tekan OK.</string>
+    <string name="wheel_hint_clock_none">Pilih jam \"--\" kalau tidak memakai jam tidur. Atas/bawah mengubah nilai, kiri/kanan pindah kolom, lalu tekan OK.</string>
+    <string name="pin_new_title">PIN baru (4 angka)</string>
+    <string name="pin_confirm_title">Ulangi PIN baru</string>
+    <string name="pin_mismatch">PIN tidak sama, coba lagi</string>
+    <string name="pin_changed">PIN baru tersimpan</string>
+    <string name="dns_title">DNS bebas iklan</string>
+    <string name="dns_off">Mati (DNS bawaan)</string>
+    <string name="dns_off_short">mati</string>
+    <string name="dns_adguard">AdGuard: blokir iklan dan pelacak</string>
+    <string name="dns_adguard_short">AdGuard</string>
+    <string name="dns_adguard_family">AdGuard Keluarga: juga situs dewasa dan SafeSearch</string>
+    <string name="dns_adguard_family_short">AdGuard Keluarga</string>
+    <string name="dns_mullvad_family">Mullvad Keluarga: iklan, pelacak, dan situs dewasa</string>
+    <string name="dns_mullvad_family_short">Mullvad Keluarga</string>
+    <string name="dns_unsupported_short">butuh Android 9</string>
+    <string name="dns_unsupported">DNS pribadi butuh Android 9 atau lebih baru.</string>
+    <string name="dns_need_permission">Ringan butuh izin sekali untuk mengubah DNS TV. Dari laptop yang tersambung adb, jalankan:\n\nadb shell pm grant id.ringan.launcher android.permission.WRITE_SECURE_SETTINGS\n\nlalu buka menu ini lagi.</string>
+    <string name="dns_checking">Menyambung ke %s…</string>
+    <string name="dns_on">DNS %s aktif. Iklan YouTube tidak ikut terblokir.</string>
+    <string name="dns_off_done">DNS kembali ke bawaan TV</string>
+    <string name="dns_failed">%s tidak bisa dihubungi, DNS dikembalikan seperti semula</string>
     <string name="parental_usage">Jam tayang hari ini: %d menit</string>
 
     <!-- Cuaca (kode WMO dari Open-Meteo) -->

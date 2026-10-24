@@ -14,10 +14,11 @@ Launcher pengganti untuk Android TV dan Google TV. Layar utamanya berupa papan k
 | Tombol remote | Di papan | Di Semua aplikasi |
 | --- | --- | --- |
 | OK | Buka aplikasi | Buka aplikasi |
-| Tahan OK, atau Menu | Pindah ke atas/bawah, hapus dari papan, info aplikasi | Tambah/hapus dari papan, sembunyikan, info aplikasi, copot |
+| Tahan OK, atau Menu | Pindah ke atas/bawah, hapus dari papan, info aplikasi. Di baris "Aplikasi lain": menu Ringan | Tambah/hapus dari papan, sembunyikan, info aplikasi, copot |
+| Roda gigi di kanan atas | — | Pengaturan orang tua, Pengaturan Android, aplikasi tersembunyi |
 | Back / Home | Kembali ke baris pertama | Kembali ke papan |
 
-- Baris **Karaoke Anak**, **Lagu Daerah**, dan **Lagu Nasional** membuka pencarian YouTube masing-masing. Nama dan kata kuncinya diatur di `karaoke` pada `config.json`; baris yang dihapus dari papan bisa ditambahkan lagi lewat tombol Menu di baris "Aplikasi lain".
+- Baris **Karaoke Anak**, **Lagu Daerah**, dan **Lagu Nasional** membuka pencarian YouTube masing-masing. Nama dan kata kuncinya diatur di `karaoke` pada `config.json`; baris yang dihapus dari papan bisa ditambahkan lagi lewat menu Ringan (tahan OK di baris "Aplikasi lain").
 - Baris **Aplikasi lain** membuka grid semua aplikasi. Tambahkan aplikasi ke papan dari sana.
 - Kolom **Status** menunjukkan kapan aplikasi terakhir dibuka (jam, KEMARIN, nama hari, atau tanggal).
 - Kalau YouTube menanyakan "Siapa yang menonton?", pilih profil sekali; sesudahnya Karaoke langsung membuka hasil pencarian.
@@ -97,7 +98,7 @@ Rekaman waktu sholat menyebut Makassar. Kalau `city` diganti, rekam ulang `shola
 
 ### Jadwal sholat
 
-Waktu sholat berikutnya tampil di kanan atas papan, misalnya *"Maghrib 17:56 · 1 j 31 mnt lagi"*. Jadwal lengkap ada di tombol Menu pada baris "Aplikasi lain".
+Waktu sholat berikutnya tampil di kanan atas papan, misalnya *"Maghrib 17:56 · 1 j 31 mnt lagi"*. Jadwal lengkap ada di menu Ringan: tahan OK pada baris "Aplikasi lain" (atau tombol Menu).
 
 - Dihitung **offline** dari posisi matahari dengan metode Kemenag (Subuh 20°, Isya 18°, Ashar mazhab Syafi'i), memakai `latitude` dan `longitude` di config.
 - Ditambah ihtiyat 2 menit (`prayer.ihtiyatMinutes`). Tanpa ihtiyat, hasilnya untuk Makassar 24 Oktober 2026 sama dengan jadwal Kemenag di Aladhan, kecuali Ashar yang selisih 1 menit karena pembulatan.
@@ -112,13 +113,13 @@ Waktu sholat berikutnya tampil di kanan atas papan, misalnya *"Maghrib 17:56 · 
 - **Azan tidak bisa dihentikan.** Semua tombol remote diabaikan sampai azan selesai, kecuali volume dan mute. Tombol power tetap berfungsi. Kalau ada aplikasi yang mencoba bersuara, Ringan mengambil alih suaranya lagi sehingga videonya berhenti kembali.
 - Rekaman azan yang dipakai sekarang adalah `suara/asli/azan.ogg`: azan di Masjid Nabawi rekaman ejaz215, berlisensi CC BY 3.0. Sumber dan kewajiban atribusinya dicatat di [suara/asli/SUMBER.md](suara/asli/SUMBER.md).
 - Untuk mengganti azan, simpan rekaman lain sebagai `azan.mp3` atau `azan.ogg` di `suara/asli/`, lalu jalankan `./scripts/kirim-suara.sh`. Skrip itu menyamakan kerasnya dengan pengumuman lewat ffmpeg (`brew install ffmpeg`). Untuk Subuh boleh ada `azan_subuh.*` (dengan *ash-shalatu khairum minan naum*); kalau tidak ada, Subuh memakai azan yang sama. Tanpa rekaman azan, hanya pengumumannya yang diputar.
-- Coba lewat tombol Menu pada baris "Aplikasi lain" → **Uji pengumuman sholat dan azan**. Suaranya mulai 10 detik kemudian, jadi sempat membuka video untuk melihat videonya berhenti. Uji ini memakai azan untuk waktu sholat berikutnya, dan khusus uji, tombol Kembali bisa menghentikannya.
+- Coba lewat menu Ringan (tahan OK pada baris "Aplikasi lain", atau tombol Menu) → **Uji pengumuman sholat dan azan**. Suaranya mulai 10 detik kemudian, jadi sempat membuka video untuk melihat videonya berhenti. Uji ini memakai azan untuk waktu sholat berikutnya, dan khusus uji, tombol Kembali bisa menghentikannya.
 - Matikan pengumuman dengan `"prayer": {"reminder": false}` dan azan dengan `"prayer": {"azan": false}`.
 - Pengumuman dan azan dijalankan layanan aksesibilitas "Ringan: tombol remote", jadi layanan itu harus aktif. Waktu azan tidak dihitung sebagai jam tayang anak.
 
 ### Jam tayang dan jam tidur
 
-Aktif kalau bagian `parental` diisi dengan PIN 4–6 angka:
+Aktif kalau sudah ada PIN orang tua, baik dibuat di TV (lihat di bawah) maupun lewat bagian `parental` di `config.json` dengan PIN 4–6 angka:
 
 | Kolom | Arti | Contoh |
 | --- | --- | --- |
@@ -130,13 +131,45 @@ Aktif kalau bagian `parental` diisi dengan PIN 4–6 angka:
 | `unlockMinutes` | Pilihan pertama lama gerbang dibuka setelah PIN benar | `30` |
 
 - Yang dihitung adalah waktu layar menyala sementara papan Ringan tidak tampil, termasuk HDMI dan Setelan. "Hari" anak dimulai pada jam bangun.
+- Di kanan atas papan, di bawah jadwal sholat, tampil **sisa waktu terbang**: *"Sisa terbang 25 mnt"*. Angka ini adalah batas yang paling dulu tercapai, entah sisa sesi, sisa jatah hari ini, atau waktu sampai jam tidur. Selama gerbang dibuka dengan PIN, yang tampil *"Gerbang dibuka sampai 00:05"*.
+- **5 menit sebelum mendarat**, saat anak sedang menonton, muncul tanda *PESAWAT AKAN MENDARAT* di atas layar dan pengumuman *"Pesawat akan mendarat lima menit lagi. Bersiap-siap, ya."* Selama pengumuman, suara video dikecilkan sebentar. Rekamannya `mendarat_5_menit.wav` (lihat naskah); tanpa rekaman, kalimatnya dibacakan TTS.
 - Saat batas tercapai, Ringan otomatis mengambil alih layar dengan tampilan **MENDARAT**, **JATAH HABIS**, atau **WAKTU TIDUR**, plus pengumuman suara. Aplikasi dari papan maupun dari Semua aplikasi hanya bisa dibuka dengan PIN.
+- **Setelan Android dikunci dengan PIN** selama jam tayang aktif, kapan pun. Dari Setelan, layanan Ringan bisa dimatikan, dan semua kunci ikut lepas. PIN diminta di setiap jalan masuk ke Setelan:
+  - tombol Settings di remote;
+  - menu "Pengaturan Android";
+  - ikon Setelan di Aplikasi lain;
+  - "Info aplikasi";
+  - jalan lain seperti Asisten Google.
+
+  Kalau Setelan terbuka tanpa PIN, papan Ringan langsung maju dan meminta PIN. Setelah PIN benar, Setelan bebas dibuka selama 15 menit.
 - PIN dimasukkan dengan roda angka: atas/bawah mengubah angka, kiri/kanan pindah digit, OK untuk membuka.
+- **Bisa diatur langsung di TV, tanpa laptop:** buka **Aplikasi lain**, pilih roda gigi di kanan atas → **Pengaturan orang tua**, lalu masukkan PIN. Bisa juga dari menu Ringan (tahan OK pada baris "Aplikasi lain"). Batas sesi, lama istirahat, jatah harian, jam tidur, jam bangun, lama buka, dan PIN diubah dengan roda angka. Kalau belum ada PIN, menu ini meminta membuat PIN dulu, jadi jam tayang bisa diaktifkan sepenuhnya dari TV.
+- Nilai yang diubah di TV disimpan di TV dan mengalahkan `config.json`, jadi mengirim ulang `config.json` (misalnya untuk API key) tidak menghapusnya. Pilih **Pakai lagi nilai dari config.json** di menu yang sama untuk membatalkan semua perubahan dari TV.
 - Setelah PIN benar, pilih berapa lama gerbang dibuka: `unlockMinutes` (misalnya 30 menit), 1 jam, 2 jam, 4 jam, atau **sampai jam bangun (mode tamu)**. Pilihan yang melewati jam bangun tidak ditampilkan.
 - Selama gerbang dibuka, semua kunci berhenti: batas sesi, jatah harian, dan jam tidur. Waktu menonton juga tidak dihitung, jadi jatah anak tidak terpakai oleh tamu.
-- Untuk membuka sebelum terkunci, misalnya saat tamu datang: tombol Menu pada baris "Aplikasi lain" → **Buka kunci jam tayang (PIN)**. Selama terbuka, menu yang sama berisi **Kunci lagi sekarang** untuk menutup gerbang lebih awal tanpa PIN.
-- Penghitung dan pengambilalihan layar dijalankan oleh layanan aksesibilitas "Ringan: tombol remote", jadi layanan itu harus aktif. Tanpa layanan itu, yang tersisa hanya kunci saat membuka aplikasi dari Ringan.
+- Untuk membuka sebelum terkunci, misalnya saat tamu datang: tahan OK pada baris "Aplikasi lain" (atau tombol Menu) → **Buka kunci jam tayang (PIN)**. Selama terbuka, menu yang sama berisi **Kunci lagi sekarang** untuk menutup gerbang lebih awal tanpa PIN.
+- Penghitung, peringatan, pengambilalihan layar, dan kunci Setelan dijalankan oleh layanan aksesibilitas "Ringan: tombol remote", jadi layanan itu harus aktif. Untuk mengunci Setelan, layanan ini hanya diberi tahu kapan aplikasi Setelan membuka jendela, tidak membaca isi layar dan tidak melihat aplikasi lain. Tanpa layanan itu, yang tersisa hanya kunci saat membuka aplikasi dari Ringan.
 - Batasannya: ini pengaman tingkat rumah, bukan kunci mutlak. Anak masih bisa membuka aplikasi lewat Asisten Google, tapi dalam 30 detik Ringan menariknya kembali. Selama gerbang tertutup, Setelan juga ikut terkunci sampai PIN dimasukkan.
+
+### DNS bebas iklan
+
+Di menu **Pengaturan orang tua** ada pilihan **DNS bebas iklan**. Pilihan ini memakai DNS pribadi bawaan Android (DNS-over-TLS) untuk menyaring domain iklan dan pelacak di semua aplikasi TV:
+
+| Pilihan | Server | Yang disaring |
+| --- | --- | --- |
+| AdGuard | `dns.adguard-dns.com` | Iklan dan pelacak |
+| AdGuard Keluarga | `family.adguard-dns.com` | Iklan, pelacak, situs dewasa, plus SafeSearch dan Mode Terbatas YouTube |
+| Mullvad Keluarga | `family.dns.mullvad.net` | Iklan, pelacak, dan situs dewasa |
+| Mati | DNS bawaan TV | — |
+
+- **Butuh izin sekali dari laptop**, karena Android tidak mengizinkan aplikasi biasa mengubah DNS. Jalankan ini sendiri:
+  ```bash
+  adb shell pm grant id.ringan.launcher android.permission.WRITE_SECURE_SETTINGS
+  ```
+  Izin ini tetap ada saat Ringan diperbarui, dan hilang kalau Ringan dicopot. Butuh Android 9 atau lebih baru.
+- Setelah DNS dipilih, Ringan menunggu 8 detik lalu memastikan internet masih jalan. Kalau server DNS tidak bisa dihubungi, pengaturan sebelumnya dipulihkan otomatis.
+- **Iklan YouTube tidak ikut terblokir**, karena iklannya datang dari server yang sama dengan videonya. Yang tersaring adalah iklan dan pelacak di aplikasi lain, browser, dan layanan bawaan TV.
+- Kalau suatu saat server DNS-nya mati, TV kehilangan internet. Pilih **Mati** di menu ini; menu Ringan tetap bisa dibuka tanpa internet. Kalau ada aplikasi yang bermasalah setelah DNS diaktifkan, matikan juga dari sini.
 
 ### Prakiraan per jam
 
@@ -189,7 +222,7 @@ Cara Ringan menjaga biaya:
 - Satu pembaruan = 2 panggilan (keberangkatan dan kedatangan) = US$0,01. Pembaruan paling sering tiap `refreshMinutes` (15), dan hanya saat layar launcher terlihat.
 - Begitu pemakaian bulan ini (bulan kalender UTC) mencapai `monthlyBudgetUsd` (4,5, atau 900 panggilan), Ringan berhenti memanggil FlightAware sampai bulan berikutnya. Hanya panggilan yang berhasil yang dihitung.
 - Lisensi AeroAPI Personal (klausul 12) melarang data FlightAware dipakai bersamaan dengan penyedia data penerbangan lain. Karena itu, selama `flightaware.apiKey` diisi, panel **hanya** memakai FlightAware. Kalau batas tercapai, panggilan gagal, atau data lebih tua dari 2 kali `refreshMinutes`, panel menampilkan keterangannya, bukan jadwal AeroDataBox. Untuk kembali ke AeroDataBox, kosongkan `flightaware.apiKey`.
-- Pemakaian bulan ini terlihat di menu launcher (tombol Menu pada baris "Aplikasi lain").
+- Pemakaian bulan ini terlihat di menu Ringan (tahan OK pada baris "Aplikasi lain").
 
 Penghitung ini hanya mencatat panggilan dari Ringan. Kalau key yang sama dipakai di tempat lain, pantau juga pemakaian di portal AeroAPI.
 
@@ -206,6 +239,8 @@ Arti status FlightAware: DI UDARA, MENDARAT, TIBA, TUNDA dengan perkiraan jam ba
 - `Parental.kt`: aturan jam tayang, jam tidur, dan PIN.
 - `PrayerTimes.kt`: perhitungan jadwal sholat offline.
 - `PrayerCall.kt`: pengumuman dan azan saat masuk waktu sholat.
+- `ParentSettings.kt`: menu pengaturan orang tua di TV, disimpan terpisah dari `config.json`.
+- `PrivateDns.kt`: DNS bebas iklan lewat DNS pribadi Android.
 - `Announcer.kt`: bel bandara dan pengumuman suara (rekaman, dengan cadangan TTS).
 - `Network.kt`: permintaan ke Open-Meteo dan AeroDataBox, plus terjemahan status penerbangan ke teks papan.
 - `FlightAware.kt`: status langsung dari FlightAware AeroAPI.

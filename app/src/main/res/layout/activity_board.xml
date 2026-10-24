@@ -46,17 +46,34 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <!-- Waktu sholat berikutnya, dihitung offline. -->
-            <TextView
-                android:id="@+id/prayer_next"
-                style="@style/BoardSmall"
-                android:drawableStart="@drawable/ic_prayer"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:textAllCaps="false"
-                android:textColor="@color/amber"
-                android:textSize="16sp"
-                android:visibility="gone" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <!-- Waktu sholat berikutnya, dihitung offline. -->
+                <TextView
+                    android:id="@+id/prayer_next"
+                    style="@style/BoardSmall"
+                    android:drawableStart="@drawable/ic_prayer"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:textAllCaps="false"
+                    android:textColor="@color/amber"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <!-- Sisa waktu terbang anak (jam tayang), atau sampai kapan gerbang dibuka. -->
+                <TextView
+                    android:id="@+id/flight_left"
+                    style="@style/BoardSmall"
+                    android:layout_marginTop="2dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/dim"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

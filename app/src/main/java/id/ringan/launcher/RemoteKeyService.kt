@@ -6,12 +6,16 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.os.SystemClock
 import android.provider.Settings
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +41,9 @@ class RemoteKeyService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
     private var lastTick = SystemClock.elapsedRealtime()
     private var azanOverlay: View? = null
+    private var landingBanner: View? = null
+    private var warningVoice: Announcer? = null
+    private var lastSettingsBounce = 0L
 
     private val ticker = object : Runnable {
         override fun run() {
@@ -56,6 +63,7 @@ class RemoteKeyService : AccessibilityService() {
         PrayerCall.listener = null
         PrayerCall.stop()
         showAzanOverlay(null)
+        warningVoice?.shutdown()
         super.onDestroy()
     }
 
@@ -112,12 +120,75 @@ class RemoteKeyService : AccessibilityService() {
 
         val rules = config.parental ?: return
         // Waktu azan tidak dihitung menonton, dan layar tidak diambil alih di tengah azan.
-        val reason = Parental.tick(this, rules, elapsed, interactive && !PrayerCall.playing) ?: return
-        startActivity(
-            Intent(this, MainActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .putExtra(MainActivity.EXTRA_LANDED, reason.name),
-        )
+        val watching = interactive && !PrayerCall.playing
+        val reason = Parental.tick(this, rules, elapsed, watching)
+        if (reason != null) {
+            startActivity(
+                Intent(this, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .putExtra(MainActivity.EXTRA_LANDED, reason.name),
+            )
+            return
+        }
+        if (watching && !Parental.boardVisible) Parental.landingWarningDue(this, rules)?.let { warnLanding(config, it) }
+    }
+
+    /** Beberapa menit sebelum gerbang tertutup: tanda di atas layar dan pengumuman, video dikecilkan sebentar. */
+    private fun warnLanding(config: RinganConfig, minutes: Int) {
+        showLandingBanner(minutes)
+        if (!config.announcements) return
+        val voice = warningVoice ?: Announcer(this).also { warningVoice = it }
+        val restore = duckOtherApps()
+        voice.announce(getString(R.string.announce_landing_soon), LANDING_SOON_CLIP, untilEnd = true) { restore() }
+    }
+
+    @SuppressLint("InflateParams") // Jendela overlay tidak punya induk.
+    private fun showLandingBanner(minutes: Int) {
+        if (Build.VERSION.SDK_INT < 22) return
+        val windows = getSystemService(WINDOW_SERVICE) as WindowManager
+        landingBanner?.let { windows.removeView(it) }
+        val view = LayoutInflater.from(this).inflate(R.layout.overlay_landing_soon, null)
+        view.findViewById<TextView>(R.id.landing_soon_hint).text = getString(R.string.landing_soon_hint, minutes)
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            PixelFormat.TRANSLUCENT,
+        ).apply {
+            gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+            y = (32 * resources.displayMetrics.density).toInt()
+        }
+        try {
+            windows.addView(view, params)
+            landingBanner = view
+        } catch (e: RuntimeException) {
+            // Tanpa tanda pun pengumumannya tetap jalan; layanan ini tidak boleh crash.
+            landingBanner = null
+            return
+        }
+        handler.postDelayed({
+            if (landingBanner === view) {
+                windows.removeView(view)
+                landingBanner = null
+            }
+        }, BANNER_MS)
+    }
+
+    /** Minta aplikasi lain mengecilkan suaranya selama pengumuman; mengembalikan fungsi untuk melepasnya. */
+    private fun duckOtherApps(): () -> Unit {
+        if (Build.VERSION.SDK_INT < 26) return {}
+        val audio = getSystemService(AUDIO_SERVICE) as AudioManager
+        val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+            )
+            .build()
+        audio.requestAudioFocus(request)
+        return { audio.abandonAudioFocusRequest(request) }
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
@@ -131,7 +202,11 @@ class RemoteKeyService : AccessibilityService() {
             return true
         }
         val target = when (event.keyCode) {
-            KeyEvent.KEYCODE_SETTINGS -> Intent(Settings.ACTION_SETTINGS)
+            KeyEvent.KEYCODE_SETTINGS -> if (SettingsGuard.needsPin()) {
+                Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_OPEN_SETTINGS, true)
+            } else {
+                Intent(Settings.ACTION_SETTINGS)
+            }
             KeyEvent.KEYCODE_NOTIFICATION, KeyEvent.KEYCODE_GUIDE, KeyEvent.KEYCODE_BUTTON_3 ->
                 Intent(this, MainActivity::class.java)
             else -> return false
@@ -160,13 +235,33 @@ class RemoteKeyService : AccessibilityService() {
         false
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent) = Unit
+    /**
+     * Hanya menerima event jendela dari aplikasi Setelan (lihat remote_keys.xml). Kalau Setelan terbuka
+     * tanpa PIN, lewat jalan apa pun, papan Ringan maju dan meminta PIN.
+     */
+    override fun onAccessibilityEvent(event: AccessibilityEvent) {
+        if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
+        if (event.packageName?.toString() !in SettingsGuard.PACKAGES || !SettingsGuard.needsPin()) return
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastSettingsBounce < BOUNCE_MS) return
+        lastSettingsBounce = now
+        startActivity(
+            Intent(this, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(MainActivity.EXTRA_OPEN_SETTINGS, true),
+        )
+    }
 
     override fun onInterrupt() = Unit
 
     private companion object {
         const val GOOGLE_TV_LAUNCHER = "com.google.android.apps.tv.launcherx"
         const val TICK_MS = 30_000L
+        const val BANNER_MS = 15_000L
+        /** Satu kali saja kalau Setelan memunculkan beberapa jendela berturut-turut. */
+        const val BOUNCE_MS = 3_000L
+        /** Nama rekaman di suara/NASKAH-REKAMAN.md. */
+        const val LANDING_SOON_CLIP = "mendarat_5_menit"
         /** Jumlah kotak nama sholat di overlay_azan.xml. */
         const val NAME_CELLS = 7
         val VOLUME_KEYS = setOf(

@@ -65,6 +65,7 @@ class MainActivity : Activity() {
     private lateinit var flightsRows: LinearLayout
     private lateinit var boardContent: ViewGroup
     private lateinit var prayerView: TextView
+    private lateinit var flightLeft: TextView
     private lateinit var weatherHourly: LinearLayout
     private lateinit var landing: View
     private lateinit var landingTitle: FlapView
@@ -157,13 +158,14 @@ class MainActivity : Activity() {
         flightsRows = findViewById(R.id.flights_rows)
         boardContent = findViewById(R.id.board_content)
         prayerView = findViewById(R.id.prayer_next)
+        flightLeft = findViewById(R.id.flight_left)
         weatherHourly = findViewById(R.id.weather_hourly)
         landing = findViewById(R.id.landing)
         landingTitle = findViewById(R.id.landing_title)
         landingMessage = findViewById(R.id.landing_message)
         landingUnlock = findViewById(R.id.landing_unlock)
         landingUnlock.setOnClickListener {
-            config.parental?.let { rules -> unlockWithPin(rules) { updateLanding() } }
+            config.parental?.let { rules -> unlockWithPin(rules) { updateParental() } }
         }
         weatherPlace.text = config.city
         flightsTitle.text = getString(R.string.flights_title_departures, config.airport)
@@ -184,6 +186,7 @@ class MainActivity : Activity() {
         }
 
         loadApps()
+        if (intent.getBooleanExtra(EXTRA_OPEN_SETTINGS, false)) openAndroidSettings()
     }
 
     override fun onResume() {
@@ -222,6 +225,11 @@ class MainActivity : Activity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (intent.getBooleanExtra(EXTRA_OPEN_SETTINGS, false)) {
+            // Dibawa ke depan oleh RemoteKeyService: Setelan Android dibuka tanpa PIN.
+            openAndroidSettings()
+            return
+        }
         val landed = intent.getStringExtra(EXTRA_LANDED)?.let { name -> LockReason.values().firstOrNull { it.name == name } }
         if (landed != null) {
             // Dibawa ke depan oleh RemoteKeyService karena gerbang jam tayang ditutup.
@@ -253,7 +261,30 @@ class MainActivity : Activity() {
         clock.setText(clockFormat.format(now))
         date.setText(dateFormat.format(now))
         updatePrayer()
+        updateFlightLeft()
         updateLanding()
+    }
+
+    /** Setelah gerbang dibuka, dikunci, atau aturannya diubah: header dan layar mendarat langsung menyesuaikan. */
+    private fun updateParental() {
+        updateFlightLeft()
+        updateLanding()
+    }
+
+    /** Sisa waktu terbang anak di bawah jadwal sholat, atau sampai kapan gerbang dibuka orang tua. */
+    private fun updateFlightLeft() {
+        val rules = config.parental
+        val until = rules?.let { Parental.unlockedUntil(this) } ?: 0L
+        val left = rules?.let { Parental.minutesUntilLanding(this, it) }
+        val text = when {
+            rules == null -> null
+            until > 0 -> getString(R.string.flight_unlocked, clockText(until))
+            left == null -> null
+            left < 60 -> getString(R.string.flight_left_minutes, left)
+            else -> getString(R.string.flight_left_hours, left / 60, left % 60)
+        }
+        flightLeft.text = text
+        flightLeft.visibility = if (text == null) View.GONE else View.VISIBLE
     }
 
     /** Waktu sholat berikutnya di header papan. Pengumuman dan azannya diurus [PrayerCall]. */
@@ -541,7 +572,7 @@ class MainActivity : Activity() {
     private fun showLauncherMenu() {
         val actions = mutableListOf<Pair<String, () -> Unit>>(
             getString(R.string.all_apps) to { startActivity(Intent(this, AllAppsActivity::class.java)) },
-            getString(R.string.android_settings) to { startSafely(Intent(Settings.ACTION_SETTINGS)) },
+            getString(R.string.android_settings) to { openAndroidSettings() },
         )
         config.parental?.let { rules ->
             val until = Parental.unlockedUntil(this)
@@ -549,10 +580,16 @@ class MainActivity : Activity() {
                 actions += getString(R.string.parental_relock_menu, clockText(until)) to {
                     Parental.relock(this)
                     toast(R.string.parental_relocked)
-                    updateLanding()
+                    updateParental()
                 }
             } else {
-                actions += getString(R.string.parental_unlock_menu) to { unlockWithPin(rules) { updateLanding() } }
+                actions += getString(R.string.parental_unlock_menu) to { unlockWithPin(rules) { updateParental() } }
+            }
+        }
+        actions += getString(R.string.parent_settings_menu) to {
+            ParentSettings.open(this) {
+                reloadConfig()
+                updateParental()
             }
         }
         if (config.prayerEnabled) {
@@ -837,6 +874,8 @@ class MainActivity : Activity() {
     companion object {
         /** Diisi RemoteKeyService saat membawa papan ke depan karena gerbang jam tayang ditutup. */
         const val EXTRA_LANDED = "id.ringan.launcher.LANDED"
+        /** Dari RemoteKeyService: Setelan Android dibuka tanpa PIN, minta PIN lalu buka lagi. */
+        const val EXTRA_OPEN_SETTINGS = "id.ringan.launcher.OPEN_SETTINGS"
 
         private val KARAOKE_ICONS = intArrayOf(
             R.drawable.ic_board_karaoke,

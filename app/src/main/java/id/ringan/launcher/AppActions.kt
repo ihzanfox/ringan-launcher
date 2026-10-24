@@ -14,6 +14,7 @@ import android.view.KeyEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.NumberPicker
+import android.widget.TextView
 import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -25,6 +26,8 @@ fun Context.colorOf(id: Int): Int =
     if (Build.VERSION.SDK_INT >= 23) getColor(id) else @Suppress("DEPRECATION") resources.getColor(id)
 
 fun Context.toast(resId: Int) = Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+
+fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
 fun Activity.startSafely(intent: Intent): Boolean =
     try {
@@ -39,6 +42,10 @@ fun Activity.startSafely(intent: Intent): Boolean =
     }
 
 fun Activity.launchApp(app: AppEntry) {
+    if (app.packageName in SettingsGuard.PACKAGES) withSettingsPin { startApp(app) } else startApp(app)
+}
+
+private fun Activity.startApp(app: AppEntry) {
     val category = if (app.isLeanback) Intent.CATEGORY_LEANBACK_LAUNCHER else Intent.CATEGORY_LAUNCHER
     val intent = Intent(Intent.ACTION_MAIN)
         .addCategory(category)
@@ -96,16 +103,40 @@ private val UNLOCK_CHOICES = listOf(60, 120, 240)
 
 fun clockText(millis: Long): String = SimpleDateFormat("HH:mm", Locale.US).format(Date(millis))
 
-/**
- * Roda angka seperti gembok koper: remote TV biasanya tidak punya tombol angka, jadi tiap digit
- * diputar dengan atas/bawah, dipindah dengan kiri/kanan, dan OK langsung mengirim PIN.
- */
+/** PIN orang tua dengan roda angka; PIN salah hanya memunculkan pesan. */
 fun Activity.askParentPin(rules: ParentalRules, onSuccess: () -> Unit) {
-    val wheels = List(rules.pin.length) {
+    askWheels(getString(R.string.pin_title), getString(R.string.pin_hint), List(rules.pin.length) { digitWheel() }, R.string.pin_open) {
+        if (it.joinToString("") == rules.pin) onSuccess() else toast(R.string.pin_wrong)
+    }
+}
+
+/** Satu kolom roda angka: teks tiap pilihan dan pilihan awal. */
+class Wheel(val labels: List<String>, val selected: Int = 0)
+
+fun digitWheel() = Wheel((0..9).map { it.toString() })
+
+/**
+ * Roda angka seperti gembok koper: remote TV biasanya tidak punya tombol angka, jadi tiap kolom
+ * diputar dengan atas/bawah, dipindah dengan kiri/kanan, dan OK langsung menyimpan. [onDone]
+ * menerima indeks pilihan tiap kolom. [separator] ditaruh di antara kolom, misalnya ":" untuk jam.
+ * [onCancel] dipanggil saat Batal atau Kembali ditekan.
+ */
+fun Activity.askWheels(
+    title: String,
+    message: String?,
+    columns: List<Wheel>,
+    positive: Int,
+    separator: String? = null,
+    onCancel: (() -> Unit)? = null,
+    onDone: (List<Int>) -> Unit,
+) {
+    val wheels = columns.map { column ->
         NumberPicker(this).apply {
             minValue = 0
-            maxValue = 9
-            wrapSelectorWheel = true
+            maxValue = column.labels.lastIndex
+            displayedValues = column.labels.toTypedArray()
+            value = column.selected.coerceIn(0, column.labels.lastIndex)
+            wrapSelectorWheel = column.labels.size > 2
             // Tanpa ini NumberPicker memunculkan keyboard di layar saat difokus.
             descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
             // Bingkai amber menandai digit yang sedang diputar.
@@ -117,19 +148,24 @@ fun Activity.askParentPin(rules: ParentalRules, onSuccess: () -> Unit) {
     val row = LinearLayout(this).apply {
         gravity = Gravity.CENTER
         val margin = (12 * resources.displayMetrics.density).toInt()
-        wheels.forEach { wheel ->
+        wheels.forEachIndexed { index, wheel ->
+            if (index > 0 && separator != null) {
+                addView(TextView(this@askWheels).apply {
+                    text = separator
+                    textSize = 28f
+                })
+            }
             addView(wheel, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .apply { setMargins(margin, margin, margin, margin) })
         }
     }
     val dialog = AlertDialog.Builder(this)
-        .setTitle(R.string.pin_title)
-        .setMessage(R.string.pin_hint)
+        .setTitle(title)
+        .setMessage(message)
         .setView(row)
-        .setPositiveButton(R.string.pin_open) { _, _ ->
-            if (wheels.joinToString("") { it.value.toString() } == rules.pin) onSuccess() else toast(R.string.pin_wrong)
-        }
-        .setNegativeButton(android.R.string.cancel, null)
+        .setPositiveButton(positive) { _, _ -> onDone(wheels.map { it.value }) }
+        .setNegativeButton(android.R.string.cancel) { _, _ -> onCancel?.invoke() }
+        .setOnCancelListener { onCancel?.invoke() }
         .show()
     wheels.forEach { wheel ->
         wheel.setOnKeyListener { _, keyCode, event ->
@@ -141,7 +177,22 @@ fun Activity.askParentPin(rules: ParentalRules, onSuccess: () -> Unit) {
     wheels.first().requestFocus()
 }
 
-fun Activity.openAppInfo(packageName: String) {
+/** Jalankan [action] yang membuka Setelan Android; kalau jam tayang aktif, minta PIN dulu (lihat [SettingsGuard]). */
+fun Activity.withSettingsPin(action: () -> Unit) {
+    val rules = RinganConfig.current.parental
+    if (rules == null || !SettingsGuard.needsPin()) {
+        action()
+        return
+    }
+    askParentPin(rules) {
+        SettingsGuard.grant()
+        action()
+    }
+}
+
+fun Activity.openAndroidSettings() = withSettingsPin { startSafely(Intent(Settings.ACTION_SETTINGS)) }
+
+fun Activity.openAppInfo(packageName: String) = withSettingsPin {
     startSafely(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)))
 }
 

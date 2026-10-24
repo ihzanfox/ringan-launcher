@@ -1,13 +1,17 @@
 package id.ringan.launcher
 
 import android.content.Context
+import android.os.SystemClock
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-/** Aturan jam tayang dari config.json bagian "parental". Menit 0 = tanpa batas. */
-class ParentalRules(
+/**
+ * Aturan jam tayang dari config.json bagian "parental", ditimpa pengaturan yang diubah di TV
+ * (lihat [ParentSettings]). Menit 0 = tanpa batas.
+ */
+data class ParentalRules(
     val pin: String,
     val sessionMinutes: Int,
     val breakMinutes: Int,
@@ -16,7 +20,20 @@ class ParentalRules(
     val bedtimeMinute: Int?,
     val wakeupMinute: Int,
     val unlockMinutes: Int,
-)
+) {
+    companion object {
+        /** Nilai bawaan untuk kolom yang tidak diisi; PIN tetap wajib. */
+        val DEFAULT = ParentalRules(
+            pin = "",
+            sessionMinutes = 60,
+            breakMinutes = 10,
+            dailyMinutes = 0,
+            bedtimeMinute = 20 * 60 + 30,
+            wakeupMinute = 6 * 60,
+            unlockMinutes = 30,
+        )
+    }
+}
 
 enum class LockReason { BREAK, DAILY, BEDTIME }
 
@@ -116,6 +133,42 @@ object Parental {
     /** Jam bangun berikutnya, untuk pilihan "buka sampai jam bangun". */
     fun nextWakeup(rules: ParentalRules): Long = nextMinuteOfDay(rules.wakeupMinute)
 
+    /**
+     * Menit sampai gerbang tertutup sendiri: sisa sesi, sisa jatah hari ini, atau jam tidur, mana yang
+     * paling dulu. Sesi dan jatah hanya berkurang selama menonton. Null kalau tidak ada batas, gerbang
+     * sedang dibuka dengan PIN, atau sudah tertutup.
+     */
+    fun minutesUntilLanding(context: Context, rules: ParentalRules, now: Long = System.currentTimeMillis()): Int? {
+        if (lockReason(context, rules, now) != null) return null
+        val prefs = prefs(context)
+        if (now < prefs.getLong(KEY_UNLOCK_UNTIL, 0L)) return null
+        val today = prefs.getString(KEY_DAY, null) == dayKey(now, rules.wakeupMinute)
+        val left = mutableListOf<Long>()
+        if (rules.sessionMinutes > 0) {
+            left += rules.sessionMinutes * MINUTE_MS - if (today) prefs.getLong(KEY_SESSION, 0L) else 0L
+        }
+        if (rules.dailyMinutes > 0) {
+            left += rules.dailyMinutes * MINUTE_MS - if (today) prefs.getLong(KEY_USED, 0L) else 0L
+        }
+        rules.bedtimeMinute?.let { left += nextMinuteOfDay(it) - now }
+        val ms = left.minOrNull() ?: return null
+        return ((ms + MINUTE_MS - 1) / MINUTE_MS).toInt().coerceAtLeast(0)
+    }
+
+    /**
+     * Sisa menit kalau peringatan "akan mendarat" perlu diberikan sekarang, atau null. Tiap pendaratan
+     * hanya diperingatkan sekali; jeda singkat di papan tidak memicu peringatan ulang.
+     */
+    fun landingWarningDue(context: Context, rules: ParentalRules): Int? {
+        val minutes = minutesUntilLanding(context, rules) ?: return null
+        if (minutes !in 1..WARN_MINUTES) return null
+        val landingAt = System.currentTimeMillis() + minutes * MINUTE_MS
+        val prefs = prefs(context)
+        if (kotlin.math.abs(landingAt - prefs.getLong(KEY_WARNED_LANDING, 0L)) < SAME_LANDING_MS) return null
+        prefs.edit().putLong(KEY_WARNED_LANDING, landingAt).apply()
+        return minutes
+    }
+
     private fun inBedtime(now: Long, rules: ParentalRules): Boolean {
         val bed = rules.bedtimeMinute ?: return false
         val wake = rules.wakeupMinute
@@ -145,10 +198,34 @@ object Parental {
     private fun prefs(context: Context) = context.getSharedPreferences("parental", Context.MODE_PRIVATE)
 
     private const val MINUTE_MS = 60_000L
+    private const val WARN_MINUTES = 5
+    private const val SAME_LANDING_MS = 3 * MINUTE_MS
+    private const val KEY_WARNED_LANDING = "warned_landing"
     private const val KEY_DAY = "day"
     private const val KEY_USED = "used_ms"
     private const val KEY_SESSION = "session_ms"
     private const val KEY_REST = "rest_ms"
     private const val KEY_BREAK_UNTIL = "break_until"
     private const val KEY_UNLOCK_UNTIL = "unlock_until"
+}
+
+/**
+ * Setelan Android hanya bisa dibuka dengan PIN orang tua, karena dari situ layanan "Ringan: tombol
+ * remote" bisa dimatikan dan semua kunci ikut lepas. PIN yang benar membuka Setelan selama [PASS_MS].
+ * Tanpa PIN orang tua (jam tayang tidak aktif), Setelan terbuka seperti biasa.
+ */
+object SettingsGuard {
+
+    val PACKAGES = setOf("com.android.tv.settings", "com.android.settings")
+
+    @Volatile
+    private var passUntil = 0L
+
+    fun needsPin(): Boolean = RinganConfig.current.parental != null && SystemClock.elapsedRealtime() >= passUntil
+
+    fun grant() {
+        passUntil = SystemClock.elapsedRealtime() + PASS_MS
+    }
+
+    private const val PASS_MS = 15 * 60_000L
 }

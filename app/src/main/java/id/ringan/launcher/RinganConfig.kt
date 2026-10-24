@@ -11,7 +11,7 @@ import java.io.IOException
 data class KaraokeChannel(val name: String, val query: String)
 
 /** Pengaturan dari config.json yang dikirim lewat scripts/kirim-config.sh. */
-class RinganConfig(
+data class RinganConfig(
     val city: String,
     val latitude: Double,
     val longitude: Double,
@@ -73,8 +73,12 @@ class RinganConfig(
         var current: RinganConfig = DEFAULT
             private set
 
-        /** File kecil, aman dibaca di thread utama. Kolom yang tidak ada memakai nilai [DEFAULT]. */
-        fun load(context: Context): RinganConfig = read(context).also { current = it }
+        /**
+         * File kecil, aman dibaca di thread utama. Kolom yang tidak ada memakai nilai [DEFAULT];
+         * jam tayang yang diubah di TV mengalahkan config.json.
+         */
+        fun load(context: Context): RinganConfig =
+            read(context).let { it.copy(parental = ParentSettings.apply(context, it.parental)) }.also { current = it }
 
         private fun read(context: Context): RinganConfig {
             val dir = context.getExternalFilesDir(null) ?: return DEFAULT
@@ -139,14 +143,15 @@ class RinganConfig(
             json ?: return null
             // Tanpa PIN yang valid, gerbang tidak bisa dibuka; lebih aman fitur ini dimatikan.
             val pin = json.optString("pin").trim().takeIf { PIN.matches(it) } ?: return null
+            val default = ParentalRules.DEFAULT
             return ParentalRules(
                 pin = pin,
-                sessionMinutes = json.optInt("sessionMinutes", 60).coerceAtLeast(0),
-                breakMinutes = json.optInt("breakMinutes", 10).coerceAtLeast(1),
-                dailyMinutes = json.optInt("dailyMinutes", 0).coerceAtLeast(0),
-                bedtimeMinute = clock(json.optString("bedtime", "20:30")),
-                wakeupMinute = clock(json.optString("wakeup", "06:00")) ?: 6 * 60,
-                unlockMinutes = json.optInt("unlockMinutes", 30).coerceAtLeast(1),
+                sessionMinutes = json.optInt("sessionMinutes", default.sessionMinutes).coerceAtLeast(0),
+                breakMinutes = json.optInt("breakMinutes", default.breakMinutes).coerceAtLeast(1),
+                dailyMinutes = json.optInt("dailyMinutes", default.dailyMinutes).coerceAtLeast(0),
+                bedtimeMinute = if (json.has("bedtime")) clock(json.optString("bedtime")) else default.bedtimeMinute,
+                wakeupMinute = clock(json.optString("wakeup")) ?: default.wakeupMinute,
+                unlockMinutes = json.optInt("unlockMinutes", default.unlockMinutes).coerceAtLeast(1),
             )
         }
 

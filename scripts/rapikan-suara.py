@@ -39,6 +39,7 @@ NAMES = [
     (r"penumpang-tujuan-(.+?)(?:-silakan.*)?", lambda m: "naik_" + m.group(1).replace("-", "_")),
     (r"perhatian-waktu-sholat-([a-z]+).*", lambda m: "sholat_" + m.group(1)),
     (r"perhatian-pesawat-telah-mendarat.*", lambda m: "mendarat"),
+    (r"perhatian-pesawat-akan-mendarat.*", lambda m: "mendarat_5_menit"),
     (r"perhatian-jatah-terbang.*", lambda m: "jatah_habis"),
     (r"perhatian-gerbang-sudah-ditutup.*", lambda m: "waktu_tidur"),
     # Sudah memakai nama di naskah.

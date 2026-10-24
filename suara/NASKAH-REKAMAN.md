@@ -10,13 +10,14 @@ Simpan rekaman di `suara/asli/`, lalu jalankan `./scripts/kirim-suara.sh`. Ekspo
 | --- | --- |
 | Membuka aplikasi dari papan | Penumpang tujuan **{nama aplikasi}**, silakan naik di gerbang **{gerbang}**. |
 | Masuk waktu sholat (papan sedang tampil) | Perhatian. Waktu sholat **{Subuh/Dzuhur/Ashar/Maghrib/Isya}** telah tiba untuk wilayah **Makassar** dan sekitarnya. |
+| 5 menit sebelum batas tercapai | Perhatian. Pesawat akan mendarat lima menit lagi. Bersiap-siap, ya. |
 | Batas sesi menonton tercapai | Perhatian. Pesawat telah mendarat. Waktunya istirahat sebentar. |
 | Jatah menonton hari ini habis | Perhatian. Jatah terbang hari ini sudah habis. Sampai jumpa besok. |
 | Jam tidur | Perhatian. Gerbang sudah ditutup. Waktunya tidur. Selamat malam. |
 
 Sebelum setiap kalimat, Ringan membunyikan `bel.wav`, atau bel tiga nada bawaan kalau file itu tidak ada.
 
-## Yang perlu direkam (16 file, ditambah 1 opsional)
+## Yang perlu direkam (17 file, ditambah 1 opsional)
 
 Setiap file berisi **satu kalimat utuh**. Kalimat yang disambung dari potongan-potongan rekaman biasanya terdengar patah, jadi bagian yang berubah-ubah dibuat per kalimat.
 
@@ -51,6 +52,7 @@ Ini isi papanmu sekarang. Untuk aplikasi lain yang nanti ditambahkan ke papan, n
 
 | File | Kalimat |
 | --- | --- |
+| `mendarat_5_menit.wav` | Perhatian. Pesawat akan mendarat lima menit lagi. Bersiap-siap, ya. |
 | `mendarat.wav` | Perhatian. Pesawat telah mendarat. Waktunya istirahat sebentar. |
 | `jatah_habis.wav` | Perhatian. Jatah terbang hari ini sudah habis. Sampai jumpa besok. |
 | `waktu_tidur.wav` | Perhatian. Gerbang sudah ditutup. Waktunya tidur. Selamat malam. |

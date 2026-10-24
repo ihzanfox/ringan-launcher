@@ -199,13 +199,19 @@ class AllAppsActivity : Activity() {
     private fun showLauncherMenu() {
         val hidden = prefs.hidden
         val hiddenApps = apps.filter { it.packageName in hidden }
-        val items = arrayOf(getString(R.string.android_settings), getString(R.string.hidden_apps, hiddenApps.size))
+        val items = arrayOf(
+            getString(R.string.parent_settings_menu),
+            getString(R.string.android_settings),
+            getString(R.string.hidden_apps, hiddenApps.size),
+        )
         AlertDialog.Builder(this)
             .setTitle(R.string.app_name)
             .setItems(items) { _, which ->
                 when (which) {
-                    0 -> startSafely(Intent(Settings.ACTION_SETTINGS))
-                    1 -> showHiddenApps(hiddenApps)
+                    // Papan membaca ulang pengaturan saat kembali ke depan.
+                    0 -> ParentSettings.open(this) {}
+                    1 -> openAndroidSettings()
+                    2 -> showHiddenApps(hiddenApps)
                 }
             }
             .show()
