@@ -1,0 +1,47 @@
+{
+  "city": "Makassar",
+  "latitude": -5.1477,
+  "longitude": 119.4327,
+  "karaoke": [
+    {
+      "name": "Karaoke Anak",
+      "query": "karaoke anak"
+    },
+    {
+      "name": "Lagu Daerah",
+      "query": "karaoke lagu daerah makassar bugis"
+    },
+    {
+      "name": "Lagu Nasional",
+      "query": "karaoke lagu nasional indonesia"
+    }
+  ],
+  "announcements": true,
+  "prayer": {
+    "enabled": true,
+    "ihtiyatMinutes": 2,
+    "reminder": true,
+    "azan": true
+  },
+  "parental": {
+    "pin": "GANTI_DENGAN_4_ANGKA",
+    "sessionMinutes": 60,
+    "breakMinutes": 10,
+    "dailyMinutes": 0,
+    "bedtime": "20:30",
+    "wakeup": "06:00",
+    "unlockMinutes": 30
+  },
+  "flights": {
+    "airport": "UPG",
+    "provider": "rapidapi",
+    "apiKey": "TEMPEL_API_KEY_AERODATABOX_DI_SINI",
+    "refreshMinutes": 240
+  },
+  "flightaware": {
+    "apiKey": "TEMPEL_API_KEY_FLIGHTAWARE_DI_SINI",
+    "airport": "WAAA",
+    "refreshMinutes": 15,
+    "monthlyBudgetUsd": 4.5
+  }
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/tile_gap"
+    android:layout_marginTop="@dimen/tile_gap_v"
+    android:layout_marginRight="@dimen/tile_gap"
+    android:layout_marginBottom="@dimen/tile_gap_v"
+    android:clickable="true"
+    android:clipChildren="false"
+    android:focusable="true"
+    android:longClickable="true"
+    android:orientation="vertical">
+
+    <!-- Cincin fokus digambar di luar kartu dengan sela, supaya tetap terlihat di banner putih.
+         duplicateParentState: cincin mengikuti status fokus tile induknya. -->
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tile_focus"
+        android:duplicateParentState="true"
+        android:padding="@dimen/focus_ring_pad">
+
+        <!-- Ukuran sebenarnya dihitung di MainActivity agar kolom pas selebar layar. -->
+        <FrameLayout
+            android:id="@+id/card"
+            android:layout_width="@dimen/tile_min_w"
+            android:layout_height="@dimen/tile_min_h"
+            android:background="@drawable/tile_card">
+
+            <ImageView
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/tile_icon"
+                android:layout_height="@dimen/tile_icon"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:visibility="gone" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:duplicateParentState="true"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/focus_ring_pad"
+        android:paddingRight="@dimen/focus_ring_pad"
+        android:textColor="@color/tile_label"
+        android:textSize="13sp" />
+</LinearLayout>

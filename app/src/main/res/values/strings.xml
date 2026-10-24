@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ringan</string>
+    <string name="launcher_menu">Menu launcher</string>
+    <string name="remote_keys_label">Ringan: tombol remote</string>
+    <string name="remote_keys_description">Saat launcher Google TV dimatikan, tombol Settings di remote membuka Pengaturan Android, dan tombol Guide atau Notifikasi kembali ke papan Ringan. Ini mencegah penerima tombol bawaan TV crash, yang membuat tombol Input dan tombol aplikasi ikut mati. Layanan ini juga menghitung jam tayang anak, memutar azan, dan mengunci remote selama azan. Layanan ini hanya menyaring tombol remote dan tidak membaca isi layar.</string>
+
+    <!-- Papan keberangkatan -->
+    <string name="departures">KEBERANGKATAN</string>
+    <string name="col_destination">TUJUAN</string>
+    <string name="col_gate">GERBANG</string>
+    <string name="col_status">STATUS</string>
+    <string name="all_apps_row">Aplikasi lain</string>
+    <string name="status_boarding">NAIK</string>
+    <string name="status_view">LIHAT</string>
+    <string name="status_yesterday">KEMARIN</string>
+    <string name="move_up">Pindah ke atas</string>
+    <string name="move_down">Pindah ke bawah</string>
+    <string name="remove_from_board">Hapus dari papan</string>
+    <string name="add_to_board">Tambah ke papan</string>
+    <string name="added_to_board">%s ditambahkan ke papan</string>
+    <string name="add_karaoke">Tambahkan %s ke papan</string>
+
+    <!-- Pengumuman suara (dibacakan mesin suara TV dalam bahasa Indonesia) -->
+    <string name="announce_boarding">Penumpang tujuan %1$s, silakan naik di gerbang %2$s.</string>
+    <string name="announce_prayer">Perhatian. Waktu sholat %1$s telah tiba untuk wilayah %2$s dan sekitarnya.</string>
+    <string name="announce_break">Perhatian. Pesawat telah mendarat. Waktunya istirahat sebentar.</string>
+    <string name="announce_daily">Perhatian. Jatah terbang hari ini sudah habis. Sampai jumpa besok.</string>
+    <string name="announce_bedtime">Perhatian. Gerbang sudah ditutup. Waktunya tidur. Selamat malam.</string>
+
+    <!-- Jadwal sholat -->
+    <string name="prayer_fajr">Subuh</string>
+    <string name="prayer_sunrise">Terbit</string>
+    <string name="prayer_dhuhr">Dzuhur</string>
+    <string name="prayer_asr">Ashar</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isya</string>
+    <string name="prayer_next">%1$s %2$s</string>
+    <string name="prayer_in_minutes">" · %d mnt lagi"</string>
+    <string name="prayer_in_hours">" · %1$d j %2$d mnt lagi"</string>
+    <string name="prayer_schedule">Jadwal sholat hari ini</string>
+    <string name="azan_test_menu">Uji pengumuman sholat dan azan</string>
+    <string name="azan_test">Azan diputar 10 detik lagi. Buka video kalau mau melihat videonya berhenti sebentar.</string>
+    <string name="azan_test_missing">Pengumuman sholat diputar 10 detik lagi. Rekaman azan belum ada di TV.</string>
+    <string name="azan_overlay_label">WAKTU SHOLAT</string>
+    <string name="azan_overlay_time">%1$s · %2$s</string>
+    <string name="azan_call_arabic">حَيَّ عَلَى الصَّلَاةِ</string>
+    <string name="azan_call_latin">Hayya \'alash-shalah</string>
+    <string name="azan_call_meaning">Marilah menunaikan sholat</string>
+    <string name="azan_call_invite">Yuk, berhenti sejenak, ambil wudhu, dan sholat %s berjamaah.</string>
+    <string name="azan_fajr_arabic">الصَّلَاةُ خَيْرٌ مِنَ النَّوْمِ</string>
+    <string name="azan_fajr_latin">Ash-shalatu khairum minan naum</string>
+    <string name="azan_fajr_meaning">Sholat lebih baik daripada tidur</string>
+    <string name="azan_fajr_invite">Yuk bangun, ambil wudhu, dan sholat Subuh berjamaah.</string>
+    <string name="azan_overlay_hint">Remote aktif lagi setelah azan selesai</string>
+    <string name="azan_overlay_test_hint">Uji azan · tekan Kembali untuk berhenti</string>
+    <string name="prayer_schedule_title">Jadwal sholat %s</string>
+
+    <!-- Jam tayang anak -->
+    <string name="landing_break_title">MENDARAT</string>
+    <string name="landing_daily_title">JATAH HABIS</string>
+    <string name="landing_bedtime_title">WAKTU TIDUR</string>
+    <string name="landing_break_message">Istirahat dulu ya. Gerbang dibuka lagi pukul %s.</string>
+    <string name="landing_daily_message">Jatah menonton hari ini sudah habis. Gerbang dibuka lagi besok pukul %s.</string>
+    <string name="landing_bedtime_message">Sudah malam, waktunya tidur. Gerbang dibuka lagi pukul %s.</string>
+    <string name="landing_unlock">Buka dengan PIN orang tua</string>
+    <string name="pin_title">Masukkan PIN orang tua</string>
+    <string name="pin_open">Buka</string>
+    <string name="pin_hint">Atas/bawah mengubah angka, kiri/kanan pindah digit, lalu tekan OK.</string>
+    <string name="pin_wrong">PIN salah</string>
+    <string name="pin_unlocked">Gerbang dibuka sampai pukul %s</string>
+    <string name="unlock_title">Buka gerbang berapa lama?</string>
+    <string name="unlock_minutes">%d menit</string>
+    <string name="unlock_hours">%d jam</string>
+    <string name="unlock_until_wakeup">Sampai jam bangun, pukul %s (mode tamu)</string>
+    <string name="parental_unlock_menu">Buka kunci jam tayang (PIN)</string>
+    <string name="parental_relock_menu">Kunci lagi sekarang (terbuka sampai %s)</string>
+    <string name="parental_relocked">Gerbang jam tayang ditutup lagi</string>
+    <string name="parental_usage">Jam tayang hari ini: %d menit</string>
+
+    <!-- Cuaca (kode WMO dari Open-Meteo) -->
+    <string name="weather_loading">Memuat cuaca…</string>
+    <string name="weather_unavailable">Cuaca tidak tersedia</string>
+    <string name="weather_no_temp">--°</string>
+    <string name="temperature">%d°</string>
+    <string name="weather_place">%1$s · %2$d°–%3$d°</string>
+    <string name="w_clear">Cerah</string>
+    <string name="w_mostly_clear">Cerah berawan</string>
+    <string name="w_partly_cloudy">Berawan</string>
+    <string name="w_overcast">Mendung</string>
+    <string name="w_fog">Berkabut</string>
+    <string name="w_drizzle">Gerimis</string>
+    <string name="w_rain_light">Hujan ringan</string>
+    <string name="w_rain">Hujan</string>
+    <string name="w_rain_heavy">Hujan lebat</string>
+    <string name="w_storm">Badai petir</string>
+    <string name="w_snow">Salju</string>
+
+    <!-- Papan penerbangan (AeroDataBox) -->
+    <string name="flights_title_departures">KEBERANGKATAN %s</string>
+    <string name="flights_title_arrivals">KEDATANGAN %s</string>
+    <string name="flights_attribution">AeroDataBox</string>
+    <string name="flights_source_live">FlightAware</string>
+    <string name="flightaware_usage">FlightAware bulan ini: US$%1$s dari US$%2$s</string>
+    <string name="flightaware_usage_error">%1$s (terakhir gagal: HTTP %2$d)</string>
+    <string name="flightaware_budget_reached">Batas FlightAware bulan ini (US$%s) sudah tercapai. Status tampil lagi awal bulan depan.</string>
+    <string name="flightaware_key_rejected">API key FlightAware ditolak (HTTP %d). Pastikan langganan AeroAPI aktif.</string>
+    <string name="flightaware_unavailable">Status FlightAware belum bisa diambil.</string>
+    <string name="flights_not_configured">Isi API key AeroDataBox di config.json, lalu jalankan scripts/kirim-config.sh.</string>
+    <string name="flights_unavailable">Jadwal penerbangan belum bisa diambil.</string>
+    <string name="flights_key_rejected">API key ditolak (HTTP %d). Pastikan sudah berlangganan paket Basic AeroDataBox dan provider di config.json benar.</string>
+    <string name="flights_none_departures">Tidak ada keberangkatan 12 jam ke depan.</string>
+    <string name="flights_none_arrivals">Tidak ada kedatangan 12 jam ke depan.</string>
+    <string name="flight_check_in">CHECK-IN</string>
+    <string name="flight_boarding">BOARDING</string>
+    <string name="flight_gate_closed">TUTUP</string>
+    <string name="flight_departed">BERANGKAT</string>
+    <string name="flight_en_route">DI UDARA</string>
+    <string name="flight_landing">MENDARAT</string>
+    <string name="flight_arrived">TIBA</string>
+    <string name="flight_gate">GATE %s</string>
+    <string name="flight_canceled">BATAL</string>
+    <string name="flight_diverted">DIALIHKAN</string>
+    <string name="flight_delayed">TERTUNDA</string>
+    <string name="flight_delayed_to">TUNDA %s</string>
+
+    <!-- Semua aplikasi -->
+    <string name="all_apps">Semua aplikasi</string>
+    <string name="all_apps_title">SEMUA APLIKASI</string>
+    <string name="hide">Sembunyikan</string>
+    <string name="app_info">Info aplikasi</string>
+    <string name="uninstall">Copot pemasangan</string>
+    <string name="android_settings">Pengaturan Android</string>
+    <string name="hidden_apps">Aplikasi tersembunyi (%d)</string>
+    <string name="hidden_apps_title">Pilih untuk ditampilkan lagi</string>
+    <string name="no_hidden_apps">Tidak ada aplikasi yang disembunyikan</string>
+    <string name="hidden_toast">%s disembunyikan. Tampilkan lagi lewat tombol pengaturan di kanan atas.</string>
+    <string name="cannot_open">Aplikasi tidak bisa dibuka</string>
+</resources>

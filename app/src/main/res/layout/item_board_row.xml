@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/board_row_h"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/board_row"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:longClickable="true"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/board_row_pad"
+    android:paddingEnd="@dimen/board_row_pad">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/board_icon"
+        android:layout_height="@dimen/board_icon"
+        android:background="@drawable/board_icon_clip"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter" />
+
+    <id.ringan.launcher.FlapView
+        android:id="@+id/name"
+        android:layout_width="@dimen/col_name_w"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/board_icon_gap"
+        app:flapCellGap="2dp"
+        app:flapCellHeight="@dimen/flap_row_h"
+        app:flapCellWidth="@dimen/flap_row_w"
+        app:flapCells="13"
+        app:flapTextColor="@color/flap_text"
+        app:flapTextSize="@dimen/flap_row_text" />
+
+    <id.ringan.launcher.FlapView
+        android:id="@+id/gate"
+        android:layout_width="@dimen/col_gate_w"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/board_col_gap"
+        app:flapCellGap="2dp"
+        app:flapCellHeight="@dimen/flap_row_h"
+        app:flapCellWidth="@dimen/flap_row_w"
+        app:flapCells="2"
+        app:flapTextColor="@color/flap_text"
+        app:flapTextSize="@dimen/flap_row_text" />
+
+    <id.ringan.launcher.FlapView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/board_col_gap"
+        app:flapCellGap="2dp"
+        app:flapCellHeight="@dimen/flap_row_h"
+        app:flapCellWidth="@dimen/flap_row_w"
+        app:flapCells="7"
+        app:flapTextColor="@color/dim"
+        app:flapTextSize="@dimen/flap_row_text" />
+</LinearLayout>

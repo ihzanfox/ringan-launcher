@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:id="@+id/board_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <!-- Kiri: papan keberangkatan berisi aplikasi pilihan. -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/board_edge"
+        android:paddingTop="@dimen/edge_v"
+        android:paddingEnd="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/board_row_pad"
+            android:paddingEnd="@dimen/board_row_pad">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_plane"
+                android:tint="@color/amber" />
+
+            <TextView
+                style="@style/BoardHeading"
+                android:layout_marginStart="12dp"
+                android:text="@string/departures"
+                android:textSize="22sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Waktu sholat berikutnya, dihitung offline. -->
+            <TextView
+                android:id="@+id/prayer_next"
+                style="@style/BoardSmall"
+                android:drawableStart="@drawable/ic_prayer"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:textAllCaps="false"
+                android:textColor="@color/amber"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/board_name_start">
+
+            <TextView
+                style="@style/BoardColumn"
+                android:layout_width="@dimen/col_name_w"
+                android:text="@string/col_destination" />
+
+            <TextView
+                style="@style/BoardColumn"
+                android:layout_width="@dimen/col_gate_w"
+                android:layout_marginStart="@dimen/board_col_gap"
+                android:text="@string/col_gate" />
+
+            <TextView
+                style="@style/BoardColumn"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/board_col_gap"
+                android:text="@string/col_status" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:fadingEdgeLength="24dp"
+            android:overScrollMode="never"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/rows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp" />
+        </ScrollView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/board_divider" />
+
+    <!-- Kanan: jam, cuaca, dan jadwal penerbangan. Hanya informasi, tidak bisa difokus. -->
+    <LinearLayout
+        android:layout_width="@dimen/side_w"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="@dimen/edge_v"
+        android:paddingEnd="24dp">
+
+        <id.ringan.launcher.FlapView
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:flapCellGap="4dp"
+            app:flapCellHeight="68dp"
+            app:flapCellWidth="46dp"
+            app:flapCells="5"
+            app:flapTextColor="@color/flap_text"
+            app:flapTextSize="46sp" />
+
+        <id.ringan.launcher.FlapView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:flapCellGap="2dp"
+            app:flapCellHeight="32dp"
+            app:flapCellWidth="23dp"
+            app:flapCells="10"
+            app:flapTextColor="@color/flap_text"
+            app:flapTextSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/weather_card"
+            android:orientation="vertical"
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <id.ringan.launcher.WeatherView
+                android:id="@+id/weather_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:importantForAccessibility="no" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/weather_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed"
+                    android:includeFontPadding="false"
+                    android:text="@string/weather_no_temp"
+                    android:textColor="@color/flap_text"
+                    android:textSize="34sp" />
+
+                <TextView
+                    android:id="@+id/weather_desc"
+                    style="@style/BoardSmall"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/weather_loading"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/weather_place"
+                    style="@style/BoardSmall"
+                    android:textColor="@color/dim" />
+            </LinearLayout>
+        </LinearLayout>
+
+            <!-- Enam jam berikutnya; ikon kecilnya diam supaya tidak menambah beban animasi. -->
+            <LinearLayout
+                android:id="@+id/weather_hourly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/flights_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="6dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_plane"
+                android:tint="@color/amber" />
+
+            <TextView
+                android:id="@+id/flights_title"
+                style="@style/BoardHeading"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:letterSpacing="0.06"
+                android:maxLines="1"
+                android:textSize="14sp" />
+
+            <!-- Sumber data wajib dicantumkan (paket gratis AeroDataBox, FlightAware Personal). -->
+            <TextView
+                android:id="@+id/flights_source"
+                style="@style/BoardSmall"
+                android:text="@string/flights_attribution"
+                android:textAllCaps="false"
+                android:textColor="@color/dim"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/flights_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/dim"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/flights_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical" />
+    </LinearLayout>
+</LinearLayout>
+
+    <!-- Layar "mendarat": menutupi papan selama gerbang jam tayang anak ditutup. -->
+    <LinearLayout
+        android:id="@+id/landing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/landing_bg"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_plane_landing"
+            android:tint="@color/amber" />
+
+        <id.ringan.launcher.FlapView
+            android:id="@+id/landing_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:flapCellGap="4dp"
+            app:flapCellHeight="56dp"
+            app:flapCellWidth="36dp"
+            app:flapCells="11"
+            app:flapTextColor="@color/amber"
+            app:flapTextSize="36sp" />
+
+        <TextView
+            android:id="@+id/landing_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:gravity="center"
+            android:maxWidth="640dp"
+            android:textColor="@color/flap_text"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/landing_unlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/board_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="24dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="12dp"
+            android:text="@string/landing_unlock"
+            android:textColor="@color/flap_text"
+            android:textSize="18sp" />
+    </LinearLayout>
+</FrameLayout>

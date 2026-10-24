@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layar penuh selama pengumuman sholat dan azan, dipasang RemoteKeyService. Muat di 540dp (TV 720p). -->
+<!-- Jendela overlay tidak punya latar tema, jadi latar di sini bukan lukisan ganda. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    tools:ignore="Overdraw"
+    android:layout_height="match_parent"
+    android:background="@color/landing_bg"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_prayer" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.3"
+        android:text="@string/azan_overlay_label"
+        android:textColor="@color/dim"
+        android:textSize="16sp" />
+
+    <id.ringan.launcher.FlapView
+        android:id="@+id/azan_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:flapCellGap="4dp"
+        app:flapCellHeight="56dp"
+        app:flapCellWidth="40dp"
+        app:flapCells="7"
+        app:flapTextColor="@color/amber"
+        app:flapTextSize="36sp" />
+
+    <TextView
+        android:id="@+id/azan_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/dim"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/azan_arabic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/flap_text"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/azan_latin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/amber"
+        android:textSize="18sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/azan_meaning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/flap_text"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/azan_invite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:maxWidth="800dp"
+        android:textColor="@color/flap_text"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/azan_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/dim"
+        android:textSize="14sp" />
+</LinearLayout>

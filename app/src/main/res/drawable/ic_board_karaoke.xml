@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="#FFC2185B" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <item
+        android:bottom="7dp"
+        android:drawable="@drawable/ic_mic"
+        android:left="7dp"
+        android:right="7dp"
+        android:top="7dp" />
+</layer-list>

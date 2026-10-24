@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="@drawable/row_line"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <id.ringan.launcher.FlapView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:flapCellGap="1dp"
+        app:flapCellHeight="24dp"
+        app:flapCellWidth="12dp"
+        app:flapCells="5"
+        app:flapTextColor="@color/flap_text"
+        app:flapTextSize="15sp" />
+
+    <!-- Kotak putih supaya logo berwarna gelap (Garuda, Sriwijaya) tetap terbaca di papan hitam. -->
+    <FrameLayout
+        android:layout_width="@dimen/logo_chip_w"
+        android:layout_height="@dimen/logo_chip_h"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/logo_chip"
+        android:padding="2dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/logo_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:textColor="@color/on_light"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/city"
+            style="@style/BoardSmall"
+            android:layout_width="match_parent"
+            android:ellipsize="end"
+            android:textColor="@color/flap_text"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Status di baris kedua supaya nama kota tidak terpotong. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/flight"
+                style="@style/BoardSmall"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:textAllCaps="false"
+                android:textColor="@color/dim"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/status"
+                style="@style/BoardSmall"
+                android:layout_marginStart="6dp"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

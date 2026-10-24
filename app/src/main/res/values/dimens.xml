@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Area aman layar TV kira-kira 48dp kiri-kanan. -->
+    <dimen name="edge_h">40dp</dimen>
+    <dimen name="edge_content">48dp</dimen>
+    <dimen name="edge_v">27dp</dimen>
+
+    <!-- Papan keberangkatan. Lebar kolom = jumlah kotak x flap_row_w + celah 2dp. -->
+    <dimen name="side_w">300dp</dimen>
+    <dimen name="board_edge">36dp</dimen>
+    <dimen name="board_row_h">52dp</dimen>
+    <dimen name="board_row_pad">10dp</dimen>
+    <dimen name="board_icon">36dp</dimen>
+    <dimen name="board_icon_gap">14dp</dimen>
+    <dimen name="board_name_start">60dp</dimen>
+    <dimen name="board_col_gap">16dp</dimen>
+    <dimen name="flap_row_w">19dp</dimen>
+    <dimen name="flap_row_h">30dp</dimen>
+    <dimen name="flap_row_text">18sp</dimen>
+    <dimen name="col_name_w">271dp</dimen>
+    <dimen name="col_gate_w">76dp</dimen>
+    <dimen name="logo_chip_w">48dp</dimen>
+    <dimen name="logo_chip_h">24dp</dimen>
+
+    <!-- Grid Semua aplikasi. Lebar kartu diperbesar sampai kolom memenuhi layar. -->
+    <dimen name="tile_min_w">152dp</dimen>
+    <dimen name="tile_min_h">86dp</dimen>
+    <dimen name="tile_gap">2dp</dimen>
+    <dimen name="tile_gap_v">5dp</dimen>
+    <dimen name="tile_radius">10dp</dimen>
+    <dimen name="tile_icon">48dp</dimen>
+    <dimen name="focus_ring_pad">6dp</dimen>
+    <dimen name="focus_ring_radius">16dp</dimen>
+    <dimen name="focus_lift">6dp</dimen>
+</resources>

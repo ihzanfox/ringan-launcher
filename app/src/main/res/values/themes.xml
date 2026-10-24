@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Ringan" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/board_bg</item>
+        <item name="android:colorAccent">@color/amber</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="BoardHeading">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textColor">@color/amber</item>
+    </style>
+
+    <style name="BoardColumn">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/dim</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BoardSmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+</resources>

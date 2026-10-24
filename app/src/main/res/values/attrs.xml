@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FlapView">
+        <attr name="flapCells" format="integer" />
+        <attr name="flapCellWidth" format="dimension" />
+        <attr name="flapCellHeight" format="dimension" />
+        <attr name="flapCellGap" format="dimension" />
+        <attr name="flapTextSize" format="dimension" />
+        <attr name="flapTextColor" format="color" />
+    </declare-styleable>
+</resources>

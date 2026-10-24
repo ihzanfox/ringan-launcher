@@ -1,0 +1,10 @@
+.gradle/
+.kotlin/
+.idea/
+build/
+*.iml
+local.properties
+config.json
+suara/siap/
+# Draf rekaman yang tertinggal di luar suara/asli/
+/*.wav

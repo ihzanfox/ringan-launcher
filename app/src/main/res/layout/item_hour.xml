@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/hour"
+        style="@style/BoardSmall"
+        android:textColor="@color/dim"
+        android:textSize="11sp" />
+
+    <id.ringan.launcher.WeatherView
+        android:id="@+id/hour_icon"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/hour_temp"
+        style="@style/BoardSmall"
+        android:textColor="@color/flap_text"
+        android:textSize="12sp" />
+</LinearLayout>
