@@ -212,3 +212,9 @@ Arti status FlightAware: DI UDARA, MENDARAT, TIBA, TUNDA dengan perkiraan jam ba
 - `RinganConfig.kt`: membaca `config.json`.
 - `AppLoader.kt`, `LauncherPrefs.kt`, `AppActions.kt`: daftar aplikasi, isi papan, dan cara membuka aplikasi.
 - `app/src/main/res/values/colors.xml` dan `dimens.xml`: warna papan dan ukuran kotak huruf.
+
+## Lisensi
+
+Kode dan dokumentasi Ringan memakai [lisensi MIT](LICENSE), © 2026 andihzan.
+
+Rekaman azan di `suara/asli/` punya lisensi sendiri dari perekamnya: `azan.ogg` CC BY 3.0 (wajib mencantumkan nama perekam) dan `azan_subuh.mp3` CC0. Rinciannya ada di [suara/asli/SUMBER.md](suara/asli/SUMBER.md).
